@@ -74,6 +74,8 @@
     <Compile Include="App_Packages\LibLog.4.2\LibLog.cs" />
     <Compile Include="Common\AbstractRepository.cs" />
     <Compile Include="Common\EFContext.cs" />
+    <Compile Include="Common\EFUnitOfWork.cs" />
+    <Compile Include="EntityExt\Log.cs" />
     <Compile Include="Entity\EntityBase.cs" />
     <Compile Include="Common\ISpecification.cs" />
     <Compile Include="Entity\EF.GenericRepository.Entity.cs">

@@ -23,14 +23,6 @@ namespace EF.GenericRepository.Entity
 
         #region public member
 
-        /// <summary>
-        /// Gets or sets the version.
-        /// </summary>
-        /// <value>
-        /// The version.
-        /// </value>
-        public virtual long Version { get; set; }
-
         #endregion
 
         #region override methods

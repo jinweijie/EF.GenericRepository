@@ -31,6 +31,7 @@
             this.gbConnection = new System.Windows.Forms.GroupBox();
             this.btnGenerateInfoLog = new System.Windows.Forms.Button();
             this.gbCriteria = new System.Windows.Forms.GroupBox();
+            this.cbLevel = new System.Windows.Forms.ComboBox();
             this.lMessage = new System.Windows.Forms.Label();
             this.lLevel = new System.Windows.Forms.Label();
             this.txtMessage = new System.Windows.Forms.TextBox();
@@ -49,7 +50,7 @@
             this.txtPageIndex = new System.Windows.Forms.TextBox();
             this.btnSearch = new System.Windows.Forms.Button();
             this.dgvData = new System.Windows.Forms.DataGridView();
-            this.cbLevel = new System.Windows.Forms.ComboBox();
+            this.btnCreateTest = new System.Windows.Forms.Button();
             this.gbConnection.SuspendLayout();
             this.gbCriteria.SuspendLayout();
             this.gbPaging.SuspendLayout();
@@ -60,9 +61,9 @@
             // 
             this.gbConnection.Controls.Add(this.btnGenerateInfoLog);
             this.gbConnection.Location = new System.Drawing.Point(17, 13);
-            this.gbConnection.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.gbConnection.Margin = new System.Windows.Forms.Padding(4);
             this.gbConnection.Name = "gbConnection";
-            this.gbConnection.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.gbConnection.Padding = new System.Windows.Forms.Padding(4);
             this.gbConnection.Size = new System.Drawing.Size(200, 85);
             this.gbConnection.TabIndex = 4;
             this.gbConnection.TabStop = false;
@@ -71,7 +72,7 @@
             // btnGenerateInfoLog
             // 
             this.btnGenerateInfoLog.Location = new System.Drawing.Point(20, 33);
-            this.btnGenerateInfoLog.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnGenerateInfoLog.Margin = new System.Windows.Forms.Padding(4);
             this.btnGenerateInfoLog.Name = "btnGenerateInfoLog";
             this.btnGenerateInfoLog.Size = new System.Drawing.Size(147, 31);
             this.btnGenerateInfoLog.TabIndex = 7;
@@ -86,13 +87,26 @@
             this.gbCriteria.Controls.Add(this.lLevel);
             this.gbCriteria.Controls.Add(this.txtMessage);
             this.gbCriteria.Location = new System.Drawing.Point(224, 13);
-            this.gbCriteria.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.gbCriteria.Margin = new System.Windows.Forms.Padding(4);
             this.gbCriteria.Name = "gbCriteria";
-            this.gbCriteria.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.gbCriteria.Padding = new System.Windows.Forms.Padding(4);
             this.gbCriteria.Size = new System.Drawing.Size(461, 85);
             this.gbCriteria.TabIndex = 5;
             this.gbCriteria.TabStop = false;
             this.gbCriteria.Text = "Criteria";
+            // 
+            // cbLevel
+            // 
+            this.cbLevel.FormattingEnabled = true;
+            this.cbLevel.Items.AddRange(new object[] {
+            "INFO",
+            "WARN",
+            "ERROR"});
+            this.cbLevel.Location = new System.Drawing.Point(80, 41);
+            this.cbLevel.Name = "cbLevel";
+            this.cbLevel.Size = new System.Drawing.Size(132, 24);
+            this.cbLevel.TabIndex = 4;
+            this.cbLevel.Text = "INFO";
             // 
             // lMessage
             // 
@@ -117,7 +131,7 @@
             // txtMessage
             // 
             this.txtMessage.Location = new System.Drawing.Point(316, 40);
-            this.txtMessage.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtMessage.Margin = new System.Windows.Forms.Padding(4);
             this.txtMessage.Name = "txtMessage";
             this.txtMessage.Size = new System.Drawing.Size(132, 22);
             this.txtMessage.TabIndex = 3;
@@ -137,9 +151,9 @@
             this.gbPaging.Controls.Add(this.txtSortAsc);
             this.gbPaging.Controls.Add(this.txtPageIndex);
             this.gbPaging.Location = new System.Drawing.Point(693, 13);
-            this.gbPaging.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.gbPaging.Margin = new System.Windows.Forms.Padding(4);
             this.gbPaging.Name = "gbPaging";
-            this.gbPaging.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.gbPaging.Padding = new System.Windows.Forms.Padding(4);
             this.gbPaging.Size = new System.Drawing.Size(657, 85);
             this.gbPaging.TabIndex = 6;
             this.gbPaging.TabStop = false;
@@ -167,7 +181,7 @@
             // btnPrevious
             // 
             this.btnPrevious.Location = new System.Drawing.Point(415, 52);
-            this.btnPrevious.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnPrevious.Margin = new System.Windows.Forms.Padding(4);
             this.btnPrevious.Name = "btnPrevious";
             this.btnPrevious.Size = new System.Drawing.Size(113, 28);
             this.btnPrevious.TabIndex = 13;
@@ -178,7 +192,7 @@
             // btnNext
             // 
             this.btnNext.Location = new System.Drawing.Point(536, 52);
-            this.btnNext.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnNext.Margin = new System.Windows.Forms.Padding(4);
             this.btnNext.Name = "btnNext";
             this.btnNext.Size = new System.Drawing.Size(113, 28);
             this.btnNext.TabIndex = 13;
@@ -199,7 +213,7 @@
             // txtSortDesc
             // 
             this.txtSortDesc.Location = new System.Drawing.Point(536, 23);
-            this.txtSortDesc.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtSortDesc.Margin = new System.Windows.Forms.Padding(4);
             this.txtSortDesc.Name = "txtSortDesc";
             this.txtSortDesc.Size = new System.Drawing.Size(112, 22);
             this.txtSortDesc.TabIndex = 5;
@@ -217,7 +231,7 @@
             // txtPageSize
             // 
             this.txtPageSize.Location = new System.Drawing.Point(241, 23);
-            this.txtPageSize.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtPageSize.Margin = new System.Windows.Forms.Padding(4);
             this.txtPageSize.Name = "txtPageSize";
             this.txtPageSize.Size = new System.Drawing.Size(48, 22);
             this.txtPageSize.TabIndex = 3;
@@ -246,7 +260,7 @@
             // txtSortAsc
             // 
             this.txtSortAsc.Location = new System.Drawing.Point(363, 23);
-            this.txtSortAsc.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtSortAsc.Margin = new System.Windows.Forms.Padding(4);
             this.txtSortAsc.Name = "txtSortAsc";
             this.txtSortAsc.Size = new System.Drawing.Size(81, 22);
             this.txtSortAsc.TabIndex = 3;
@@ -255,7 +269,7 @@
             // txtPageIndex
             // 
             this.txtPageIndex.Location = new System.Drawing.Point(107, 23);
-            this.txtPageIndex.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtPageIndex.Margin = new System.Windows.Forms.Padding(4);
             this.txtPageIndex.Name = "txtPageIndex";
             this.txtPageIndex.Size = new System.Drawing.Size(40, 22);
             this.txtPageIndex.TabIndex = 3;
@@ -264,7 +278,7 @@
             // btnSearch
             // 
             this.btnSearch.Location = new System.Drawing.Point(1141, 106);
-            this.btnSearch.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnSearch.Margin = new System.Windows.Forms.Padding(4);
             this.btnSearch.Name = "btnSearch";
             this.btnSearch.Size = new System.Drawing.Size(200, 44);
             this.btnSearch.TabIndex = 7;
@@ -276,36 +290,35 @@
             // 
             this.dgvData.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvData.Location = new System.Drawing.Point(17, 158);
-            this.dgvData.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.dgvData.Margin = new System.Windows.Forms.Padding(4);
             this.dgvData.Name = "dgvData";
             this.dgvData.Size = new System.Drawing.Size(1333, 430);
             this.dgvData.TabIndex = 9;
             // 
-            // cbLevel
+            // btnCreateTest
             // 
-            this.cbLevel.FormattingEnabled = true;
-            this.cbLevel.Items.AddRange(new object[] {
-            "INFO",
-            "WARN",
-            "ERROR"});
-            this.cbLevel.Location = new System.Drawing.Point(80, 41);
-            this.cbLevel.Name = "cbLevel";
-            this.cbLevel.Size = new System.Drawing.Size(132, 24);
-            this.cbLevel.TabIndex = 4;
-            this.cbLevel.Text = "INFO";
+            this.btnCreateTest.Location = new System.Drawing.Point(974, 106);
+            this.btnCreateTest.Margin = new System.Windows.Forms.Padding(4);
+            this.btnCreateTest.Name = "btnCreateTest";
+            this.btnCreateTest.Size = new System.Drawing.Size(147, 44);
+            this.btnCreateTest.TabIndex = 7;
+            this.btnCreateTest.Text = "Create Test";
+            this.btnCreateTest.UseVisualStyleBackColor = true;
+            this.btnCreateTest.Click += new System.EventHandler(this.btnCreateTest_Click);
             // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1371, 599);
+            this.Controls.Add(this.btnCreateTest);
             this.Controls.Add(this.dgvData);
             this.Controls.Add(this.btnSearch);
             this.Controls.Add(this.gbPaging);
             this.Controls.Add(this.gbCriteria);
             this.Controls.Add(this.gbConnection);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "Main";
             this.Text = "EF Generic Repository Sample";
             this.gbConnection.ResumeLayout(false);
@@ -341,6 +354,7 @@
         private System.Windows.Forms.Label lTotalCountValue;
         private System.Windows.Forms.Button btnGenerateInfoLog;
         private System.Windows.Forms.ComboBox cbLevel;
+        private System.Windows.Forms.Button btnCreateTest;
     }
 }
 

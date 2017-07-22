@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
+using EF.GenericRepository.Common;
+using EF.GenericRepository.Entity;
 using EF.GenericRepository.Logging;
 using EF.GenericRepository.Repository;
 using EF.GenericRepository.Specifications;
@@ -20,11 +22,6 @@ namespace EF.GenericRepository
 
         }
 
-        private LogRepository GetRepository()
-        {
-            return new LogRepository();
-        }
-
         private LogSearchSpecification GetSpecification()
         {
             return new LogSearchSpecification
@@ -36,13 +33,14 @@ namespace EF.GenericRepository
 
         private void btnSearch_Click(object sender, EventArgs e)
         {
-            var repo = GetRepository();
+            var uow = new EFUnitOfWork();
+            var repo = uow.GetLogRepository();
 
             var result = repo.Find(GetSpecification(),
                 int.Parse(this.txtPageIndex.Text),
                 int.Parse(this.txtPageSize.Text),
                 new[] { this.txtSortAsc.Text },
-                new string[] { this.txtSortDesc.Text });
+                new string[] { this.txtSortDesc.Text }, l=>l.Level);
 
             this.dgvData.DataSource = result.Item1;
             this.lTotalCountValue.Text = result.Item2.ToString();
@@ -89,6 +87,26 @@ namespace EF.GenericRepository
             }
 
             MessageBox.Show("100 info log entries has been generated.");
+        }
+
+        private void btnCreateTest_Click(object sender, EventArgs e)
+        {
+            var uow = new EFUnitOfWork();
+            var repo = uow.GetLogRepository();
+
+            repo.Create(new Log
+            {
+                LevelId = 1,
+                Thread = "",
+                Location = "Manual Creation",
+                Message = "This is manually created log.",
+                CreateTime = DateTimeOffset.Now,
+                Date = DateTime.Now
+            });
+
+            uow.Commit();
+
+            MessageBox.Show("New log created using unit of work pattern.");
         }
     }
 }
