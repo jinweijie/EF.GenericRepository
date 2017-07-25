@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using EF.GenericRepository.Common;
 using EF.GenericRepository.Entity;
@@ -36,11 +37,18 @@ namespace EF.GenericRepository
             var uow = new EFUnitOfWork();
             var repo = uow.GetLogRepository();
 
+            var sortings = new List<SortDescriptor>();
+            if (!string.IsNullOrWhiteSpace(this.txtSortAsc.Text))
+                sortings.Add(new SortDescriptor { Direction = SortDescriptor.SortingDirection.Ascending, Field = this.txtSortAsc.Text.Trim() });
+
+            if (!string.IsNullOrWhiteSpace(this.txtSortDesc.Text))
+                sortings.Add(new SortDescriptor { Direction = SortDescriptor.SortingDirection.Descending, Field = this.txtSortDesc.Text.Trim() });
+
             var result = repo.Find(GetSpecification(),
                 int.Parse(this.txtPageIndex.Text),
                 int.Parse(this.txtPageSize.Text),
-                new[] { this.txtSortAsc.Text },
-                new string[] { this.txtSortDesc.Text }, l=>l.Level);
+                sortings, 
+                l=>l.Level);
 
             this.dgvData.DataSource = result.Item1;
             this.lTotalCountValue.Text = result.Item2.ToString();

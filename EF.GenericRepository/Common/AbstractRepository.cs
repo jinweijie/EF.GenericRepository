@@ -5,6 +5,7 @@ using System.Data.Entity.Core.Objects;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using EF.GenericRepository.Entity;
 
 namespace EF.GenericRepository.Common
@@ -171,37 +172,32 @@ namespace EF.GenericRepository.Common
         /// <param name="query">The query.</param>
         /// <param name="pageIndex">Index of the page.</param>
         /// <param name="pageSize">Size of the page.</param>
-        /// <param name="asc">The asc.</param>
-        /// <param name="desc">The desc.</param>
-        /// <param name="totalRowCount">The total row count.</param>
+        /// <param name="sortings">The sortings.</param>
         /// <returns></returns>
-        protected Tuple<IQueryable<T>,int>PerformPaging/*<T>*/(IQueryable<T> query
+        protected Tuple<IQueryable<T>, int> PerformPaging/*<T>*/(IQueryable<T> query
             , int pageIndex
             , int pageSize
-            , string[] asc
-            , string[] desc)
+            , List<SortDescriptor> sortings)
         {
             int index = 0;
 
-            foreach (string a in asc)
+            foreach (var sorting in sortings)
             {
-                if(string.IsNullOrWhiteSpace(a))
+                if (string.IsNullOrWhiteSpace(sorting.Field))
                     continue;
 
-                query = CallMethod/*<T>*/(query, index == 0 ? "OrderBy" : "ThenBy", a);
-                index++;
+                if (sorting.Direction == SortDescriptor.SortingDirection.Ascending)
+                {
+                    query = CallMethod/*<T>*/(query, index == 0 ? "OrderBy" : "ThenBy", sorting.Field);
+                    index++;
+                }
+                else if(sorting.Direction == SortDescriptor.SortingDirection.Descending)
+                {
+                    query = CallMethod/*<T>*/(query, index == 0 ? "OrderByDescending" : "ThenByDescending", sorting.Field);
+                    index++;
+                }
             }
-
-            index = 0;
-            foreach (string d in desc)
-            {
-                if (string.IsNullOrWhiteSpace(d))
-                    continue;
-
-                query = CallMethod/*<T>*/(query, index == 0 ? "OrderByDescending" : "ThenByDescending", d);
-                index++;
-            }
-
+            
             var totalRowCount = query.Count<T>();
 
             query = query.Skip<T>(pageIndex * pageSize);
@@ -210,34 +206,37 @@ namespace EF.GenericRepository.Common
             return new Tuple<IQueryable<T>, int>(query, totalRowCount);
         }
 
+        
         /// <summary>
         /// Performs the paging asynchronous.
         /// </summary>
         /// <param name="query">The query.</param>
         /// <param name="pageIndex">Index of the page.</param>
         /// <param name="pageSize">Size of the page.</param>
-        /// <param name="asc">The asc.</param>
-        /// <param name="desc">The desc.</param>
+        /// <param name="sortings">The sortings.</param>
         /// <returns></returns>
         protected async Task<Tuple<IQueryable<T>, int>> PerformPagingAsync/*<T>*/(IQueryable<T> query
             , int pageIndex
-            , int pageSize
-            , string[] asc
-            , string[] desc)
+            , int pageSize,
+            List<SortDescriptor> sortings)
         {
             int index = 0;
 
-            foreach (string a in asc)
+            foreach (var sorting in sortings)
             {
-                query = CallMethod/*<T>*/(query, index == 0 ? "OrderBy" : "ThenBy", a);
-                index++;
-            }
+                if (string.IsNullOrWhiteSpace(sorting.Field))
+                    continue;
 
-            index = 0;
-            foreach (string d in desc)
-            {
-                query = CallMethod/*<T>*/(query, index == 0 ? "OrderByDescending" : "ThenByDescending", d);
-                index++;
+                if (sorting.Direction == SortDescriptor.SortingDirection.Ascending)
+                {
+                    query = CallMethod/*<T>*/(query, index == 0 ? "OrderBy" : "ThenBy", sorting.Field);
+                    index++;
+                }
+                else if (sorting.Direction == SortDescriptor.SortingDirection.Descending)
+                {
+                    query = CallMethod/*<T>*/(query, index == 0 ? "OrderByDescending" : "ThenByDescending", sorting.Field);
+                    index++;
+                }
             }
 
             var totalRowCount = await query.CountAsync<T>();
@@ -470,16 +469,14 @@ namespace EF.GenericRepository.Common
         public virtual IEnumerable<T> Find(Expression<Func<T, bool>> criteria
             , int pageIndex
             , int pageSize
-            , string[] asc
-            , string[] desc
+            , List<SortDescriptor> sortings
             , out int totalRowCount
             , params Expression<Func<T, object>>[] includeProperties)
         {
             var paged = PrepareFindQuery(criteria
             , pageIndex
             , pageSize
-            , asc
-            , desc
+            , sortings
             , includeProperties);
 
             var query = paged.Item1;
@@ -501,15 +498,13 @@ namespace EF.GenericRepository.Common
         public virtual Tuple<IEnumerable<T>, int> Find(Expression<Func<T, bool>> criteria
             , int pageIndex
             , int pageSize
-            , string[] asc
-            , string[] desc
+            , List<SortDescriptor> sortings
             , params Expression<Func<T, object>>[] includeProperties)
         {
             var paged = PrepareFindQuery(criteria
             , pageIndex
             , pageSize
-            , asc
-            , desc
+            , sortings
             , includeProperties);
 
             var query = paged.Item1;
@@ -531,15 +526,13 @@ namespace EF.GenericRepository.Common
         public virtual async Task<Tuple<IEnumerable<T>, int>> FindAsync(Expression<Func<T, bool>> criteria
             , int pageIndex
             , int pageSize
-            , string[] asc
-            , string[] desc
+            , List<SortDescriptor> sortings
             , params Expression<Func<T, object>>[] includeProperties)
         {
             var paged = PrepareFindQuery(criteria
             , pageIndex
             , pageSize
-            , asc
-            , desc
+            , sortings
             , includeProperties);
 
             var list = await paged.Item1.ToListAsync();
@@ -561,15 +554,13 @@ namespace EF.GenericRepository.Common
         public virtual Tuple<IEnumerable<T>, int> Find(ISpecification<T> spec
                                                         , int pageIndex
                                                         , int pageSize
-                                                        , string[] asc
-                                                        , string[] desc
+                                                        , List<SortDescriptor> sortings
                                                         , params Expression<Func<T, object>>[] includeProperties)
         {
             return Find(spec.ToExpression()
                         , pageIndex
                         , pageSize
-                        , asc
-                        , desc
+                        , sortings
                         , includeProperties);
         }
 
@@ -586,15 +577,13 @@ namespace EF.GenericRepository.Common
         public virtual async Task<Tuple<IEnumerable<T>, int>> FindAsync(ISpecification<T> spec
                                                                         , int pageIndex
                                                                         , int pageSize
-                                                                        , string[] asc
-                                                                        , string[] desc
+                                                                        , List<SortDescriptor> sortings
                                                                         , params Expression<Func<T, object>>[] includeProperties)
         {
             return await FindAsync(spec.ToExpression()
                                     , pageIndex
                                     , pageSize
-                                    , asc
-                                    , desc
+                                    , sortings
                                     , includeProperties);
 
         }
@@ -635,8 +624,7 @@ namespace EF.GenericRepository.Common
         public virtual Tuple<IQueryable<T>, int> PrepareFindQuery(Expression<Func<T, bool>> criteria
             , int pageIndex
             , int pageSize
-            , string[] asc
-            , string[] desc
+            , List<SortDescriptor> sortings
             , params Expression<Func<T, object>>[] includeProperties)
         {
             Initialize();
@@ -646,7 +634,7 @@ namespace EF.GenericRepository.Common
             var query = this.Context.ObjectContext.CreateQuery<T>(entityName)
                                 .Where(criteria);
 
-            var paged = PerformPaging/*<T>*/(query, pageIndex, pageSize, asc, desc);
+            var paged = PerformPaging/*<T>*/(query, pageIndex, pageSize, sortings);
             query = paged.Item1;
             var totalRowCount = paged.Item2;
 
@@ -671,8 +659,7 @@ namespace EF.GenericRepository.Common
         public virtual async Task<Tuple<IQueryable<T>, int>> PrepareFindQueryAsync(Expression<Func<T, bool>> criteria
             , int pageIndex
             , int pageSize
-            , string[] asc
-            , string[] desc
+            , List<SortDescriptor> sortings
             , params Expression<Func<T, object>>[] includeProperties)
         {
             Initialize();
@@ -682,7 +669,7 @@ namespace EF.GenericRepository.Common
             var query = this.Context.ObjectContext.CreateQuery<T>(entityName)
                                 .Where(criteria);
 
-            var paged = await PerformPagingAsync/*<T>*/(query, pageIndex, pageSize, asc, desc);
+            var paged = await PerformPagingAsync/*<T>*/(query, pageIndex, pageSize, sortings);
             query = paged.Item1;
             var totalRowCount = paged.Item2;
 
@@ -826,8 +813,7 @@ namespace EF.GenericRepository.Common
         [Obsolete("Use FindAll with Tuple return value method instead.")]
         public virtual IEnumerable<T> FindAll(int pageIndex
             , int pageSize
-            , string[] asc
-            , string[] desc
+            , List<SortDescriptor> sortings
             , out int totalRowCount
             , params Expression<Func<T, object>>[] includeProperties)
         {
@@ -836,7 +822,7 @@ namespace EF.GenericRepository.Common
             var entityName = GetEntityName();
             IQueryable<T> query = this.Context.ObjectContext.CreateQuery<T>(entityName);
 
-            var paged = PerformPaging/*<T>*/(query, pageIndex, pageSize, asc, desc);
+            var paged = PerformPaging/*<T>*/(query, pageIndex, pageSize, sortings);
 
             query = paged.Item1;
             totalRowCount = paged.Item2;
@@ -860,8 +846,7 @@ namespace EF.GenericRepository.Common
         /// <returns></returns>
         public virtual Tuple<IEnumerable<T>, int> FindAll(int pageIndex
             , int pageSize
-            , string[] asc
-            , string[] desc
+            , List<SortDescriptor> sortings
             , params Expression<Func<T, object>>[] includeProperties)
         {
             Initialize();
@@ -869,7 +854,7 @@ namespace EF.GenericRepository.Common
             var entityName = GetEntityName();
             IQueryable<T> query = this.Context.ObjectContext.CreateQuery<T>(entityName);
 
-            var paged = PerformPaging/*<T>*/(query, pageIndex, pageSize, asc, desc);
+            var paged = PerformPaging/*<T>*/(query, pageIndex, pageSize, sortings);
 
             query = paged.Item1;
             var totalRowCount = paged.Item2;
@@ -893,8 +878,7 @@ namespace EF.GenericRepository.Common
         /// <returns></returns>
         public virtual async Task<Tuple<IEnumerable<T>, int>> FindAllAsync(int pageIndex
             , int pageSize
-            , string[] asc
-            , string[] desc
+            , List<SortDescriptor> sortings
             , params Expression<Func<T, object>>[] includeProperties)
         {
             Initialize();
@@ -902,7 +886,7 @@ namespace EF.GenericRepository.Common
             var entityName = GetEntityName();
             IQueryable<T> query = this.Context.ObjectContext.CreateQuery<T>(entityName);
 
-            var paged = await PerformPagingAsync/*<T>*/(query, pageIndex, pageSize, asc, desc);
+            var paged = await PerformPagingAsync/*<T>*/(query, pageIndex, pageSize, sortings);
 
             query = paged.Item1;
             var totalRowCount = paged.Item2;

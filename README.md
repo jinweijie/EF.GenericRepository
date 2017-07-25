@@ -40,8 +40,8 @@ var repo = uow.GetLogRepository(); //get repo from UnitOfWork
 var result = repo.Find( GetSpecification(),
                         pageIndex,
                         pageSize,
-                        new[] { sortAsc },
-                        new string[] { sortDesc }, l => l.Level); //join the Level table
+                        List<SortDescriptor> sortings，
+                        l => l.Level); //join the Level table
 ```
 
 # Unit of Work

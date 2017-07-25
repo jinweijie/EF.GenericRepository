@@ -75,6 +75,7 @@
     <Compile Include="Common\AbstractRepository.cs" />
     <Compile Include="Common\EFContext.cs" />
     <Compile Include="Common\EFUnitOfWork.cs" />
+    <Compile Include="Common\SortDescriptor.cs" />
     <Compile Include="EntityExt\Log.cs" />
     <Compile Include="Entity\EntityBase.cs" />
     <Compile Include="Common\ISpecification.cs" />
